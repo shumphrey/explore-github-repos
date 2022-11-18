@@ -36,9 +36,10 @@ export function isBasicBranchProtectionEnough(
     allowsForcePushes,
     dismissesStaleReviews,
     // This probably should be on, but isn't on most of our repos
-    // isAdminEnforced,
+    isAdminEnforced,
     // this is new and none of our repos have this yet
-    // requireLastPushApproval,
+    requireLastPushApproval,
+    // ?
     // restrictsPushes
   } = rules;
 
@@ -46,12 +47,16 @@ export function isBasicBranchProtectionEnough(
   //   allowsDeletions,
   //   allowsForcePushes,
   //   dismissesStaleReviews,
-  //   // isAdminEnforced,
+  //   isAdminEnforced,
+  //   requireLastPushApproval,
   // });
-  return !allowsDeletions && !allowsForcePushes && dismissesStaleReviews;
-  // isAdminEnforced;
-  // requireLastPushApproval &&
-  // restrictsPushes;
+  return (
+    !allowsDeletions &&
+    !allowsForcePushes &&
+    dismissesStaleReviews &&
+    isAdminEnforced &&
+    requireLastPushApproval
+  );
 }
 
 export function isSufficientStatusChecks(
