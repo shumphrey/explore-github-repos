@@ -12,6 +12,7 @@ interface Repository {
   isArchived: boolean;
   isFork: boolean;
   isPrivate: boolean;
+  viewerCanAdminister: boolean;
   // branchProtectionRules: Nodes<BranchProtectionRules>;
   // languages: unknown;
   // primaryLanguage: unknown;
@@ -31,7 +32,7 @@ async function* paginate() {
   let hasMore = true;
   let cursor: string | undefined;
 
-  const fullteam = process.env[2];
+  const fullteam = process.argv[2];
   if (!fullteam) {
     throw new Error("Missing full team name");
   }
@@ -64,6 +65,12 @@ async function* paginate() {
 const paginator = paginate();
 for await (const repos of paginator) {
   for (const repo of repos) {
+    // ignore things we have write access to but can't admin
+    // stuff like bbc/web or homepage-v5-lodash
+    if (!repo.viewerCanAdminister) {
+      continue;
+      // console.error(`\t${chalk.red(repo.name)} no admin access`);
+    }
     console.log(repo.name);
     if (!repo.isPrivate) {
       console.error(`\t${chalk.red(repo.name)} is public`);

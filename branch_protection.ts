@@ -21,6 +21,7 @@ interface Repository {
   isArchived: boolean;
   isFork: boolean;
   isPrivate: boolean;
+  viewerCanAdminister: boolean;
   branchProtectionRules: Nodes<BranchProtectionRules>;
   // languages: unknown;
   // primaryLanguage: unknown;
@@ -73,6 +74,10 @@ async function* paginate() {
 const paginator = paginate();
 for await (const repos of paginator) {
   for (const repo of repos) {
+    if (!repo.viewerCanAdminister) {
+      continue;
+      // console.error(`\t${chalk.red(repo.name)} no admin access`);
+    }
     if (ignores.includes(repo.name)) {
       continue;
     }
