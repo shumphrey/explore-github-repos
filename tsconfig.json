@@ -1,7 +1,6 @@
 {
   "include": [
     "index.ts",
-    "branch_protection.ts",
     "lib/**/*.ts",
   ],
   "compilerOptions": {
