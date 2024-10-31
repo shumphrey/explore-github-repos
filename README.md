@@ -5,15 +5,7 @@
 List repos belonging to a team
 
 ```
-node dist/branch_protection.js "org/team"
-```
-
-## branch_protection.ts
-
-Explore branch protection rules on repos owned by a team
-
-```
-node dist/branch_protection.js "org/team"
+node dist/index.js "org/team"
 ```
 
 ### ignore file
