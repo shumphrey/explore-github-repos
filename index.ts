@@ -28,14 +28,10 @@ interface OrganizationTeamRespositories {
   };
 }
 
-async function* paginate() {
+async function* paginate(fullteam: string) {
   let hasMore = true;
   let cursor: string | undefined;
 
-  const fullteam = process.argv[2];
-  if (!fullteam) {
-    throw new Error("Missing full team name");
-  }
   const [orgname, teamname] = fullteam.split("/");
   if (!orgname || !teamname) {
     throw new Error("Invalid teamname. Should be org/team");
@@ -62,18 +58,24 @@ async function* paginate() {
   }
 }
 
-const paginator = paginate();
-for await (const repos of paginator) {
-  for (const repo of repos) {
-    // ignore things we have write access to but can't admin
-    // stuff like bbc/web or homepage-v5-lodash
-    if (!repo.viewerCanAdminister) {
-      continue;
-      // console.error(`\t${chalk.red(repo.name)} no admin access`);
-    }
-    console.log(repo.name);
-    if (!repo.isPrivate) {
-      console.error(`\t${chalk.red(repo.name)} is public`);
+const fullteams = process.argv.slice(2);
+if (!fullteams.length) {
+  throw new Error("Missing full team name");
+}
+for (const fullteam of fullteams) {
+  const paginator = paginate(fullteam);
+  for await (const repos of paginator) {
+    for (const repo of repos) {
+      // ignore things we have write access to but can't admin
+      // stuff like bbc/web or homepage-v5-lodash
+      if (!repo.viewerCanAdminister) {
+        continue;
+        // console.error(`\t${chalk.red(repo.name)} no admin access`);
+      }
+      console.log(repo.name);
+      if (!repo.isPrivate) {
+        console.error(`\t${chalk.red(repo.name)} is public`);
+      }
     }
   }
 }
