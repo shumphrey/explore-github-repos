@@ -1,9 +1,10 @@
 # Exploring repositories using the GitHub API
 
-Install [tsx](https://www.npmjs.com/package/tsx)
+Install [tsx](https://www.npmjs.com/package/tsx) and the local dependencies
 
 ```
 npm install -g tsx
+npm ci
 ```
 
 List repos belonging to a team:
