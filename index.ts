@@ -1,8 +1,10 @@
+#!/usr/bin/env node
+
 import chalk from "chalk";
 import { Octokit } from "octokit";
-import { getToken } from "./lib/token.js";
-import { list_repositories } from "./lib/queries.js";
-import type { Result } from "./types/github.js";
+import { getToken } from "./lib/token.ts";
+import { list_repositories } from "./lib/queries.ts";
+import type { Result } from "./types/github.ts";
 
 const octokit = new Octokit({ auth: await getToken() });
 
@@ -40,14 +42,14 @@ async function* paginate(fullteam: string) {
   while (hasMore) {
     const res = await octokit.graphql<OrganizationTeamRespositories>(
       list_repositories(orgname, teamname),
-      cursor ? { cursor } : {}
+      cursor ? { cursor } : {},
     );
 
-    const {
-      organization: {
-        team: { repositories },
-      },
-    } = res;
+    const repositories = res.organization?.team?.repositories;
+    if (!repositories) {
+      console.error(res);
+      throw new Error(`No repositories found for team ${fullteam}`);
+    }
 
     yield repositories.edges
       .filter(({ node }) => !node.isArchived && !node.isFork)

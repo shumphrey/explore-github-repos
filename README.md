@@ -3,15 +3,16 @@
 Install [tsx](https://www.npmjs.com/package/tsx) and the local dependencies
 
 ```
-npm install -g tsx
 npm ci
 ```
 
 List repos belonging to a team:
 
 ```
-tsx ./index.ts "org/team"
+./index.ts "org/team"
 ```
+
+Requires a modern node with type stripping support
 
 # ignore file
 
